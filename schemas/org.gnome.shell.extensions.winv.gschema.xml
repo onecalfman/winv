@@ -1,0 +1,50 @@
+<schemalist gettext-domain="winv">
+  <schema id="org.gnome.shell.extensions.winv" path="/org/gnome/shell/extensions/winv/">
+    <key type="i" name="history-size">
+      <default>50</default>
+      <summary>Maximum number of history items</summary>
+      <description>Pinned items are never evicted. The most recent unpinned items are kept up to this limit.</description>
+      <range min="5" max="500"/>
+    </key>
+    <key name="toggle-menu" type="as">
+      <default><![CDATA[['<Super>v']]]></default>
+      <summary>Toggle clipboard panel</summary>
+      <description>Windows-style Super+V shortcut.</description>
+    </key>
+    <key name="private-mode" type="b">
+      <default>false</default>
+      <summary>Private mode</summary>
+      <description>When enabled, new copies are not recorded.</description>
+    </key>
+    <key name="capture-images" type="b">
+      <default>true</default>
+      <summary>Capture images</summary>
+      <description>Save copied images with thumbnails.</description>
+    </key>
+    <key name="paste-on-selection" type="b">
+      <default>true</default>
+      <summary>Auto-paste on select</summary>
+      <description>Paste the entry into the focused app immediately after picking it.</description>
+    </key>
+    <key name="ignore-password-mimes" type="b">
+      <default>true</default>
+      <summary>Ignore password managers</summary>
+      <description>Skip clipboard content marked sensitive by password managers.</description>
+    </key>
+    <key name="strip-text" type="b">
+      <default>false</default>
+      <summary>Trim whitespace</summary>
+      <description>Remove leading/trailing whitespace from copied text.</description>
+    </key>
+    <key name="show-indicator" type="b">
+      <default>true</default>
+      <summary>Show top bar icon</summary>
+      <description>Show a clipboard button in the top bar that toggles the panel.</description>
+    </key>
+    <key name="follow-caret" type="b">
+      <default>true</default>
+      <summary>Open near the text caret</summary>
+      <description>Place the panel next to the field you are typing in (falls back to the mouse pointer, then screen center).</description>
+    </key>
+  </schema>
+</schemalist>

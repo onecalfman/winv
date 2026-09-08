@@ -1,0 +1,29 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate extension
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install GNOME packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y gnome-shell jq unzip
+
+      - name: Run validation
+        run: ./tests/validate.sh

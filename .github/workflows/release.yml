@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Package and release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install GNOME packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y gnome-shell jq unzip
+
+      - name: Validate source
+        run: ./tests/validate.sh
+
+      - name: Build extension bundle
+        run: |
+          mkdir -p dist
+          gnome-extensions pack . --force --out-dir dist
+          test -s "dist/winv@jonas.dev.shell-extension.zip"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "dist/winv@jonas.dev.shell-extension.zip" \
+            --title "WinV $GITHUB_REF_NAME" \
+            --generate-notes

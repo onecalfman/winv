@@ -1,0 +1,169 @@
+/* WinV Clipboard — GNOME-native floating card, no top-bar icon. */
+
+.winv-backdrop {
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.winv-panel {
+  background-color: rgba(36, 36, 36, 0.97);
+  color: #eeeeec;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 64px rgba(0, 0, 0, 0.55);
+  padding: 14px;
+}
+
+.winv-header {
+  spacing: 8px;
+  margin-bottom: 10px;
+}
+
+.winv-search-icon {
+  color: rgba(255, 255, 255, 0.55);
+  icon-size: 18px;
+  margin-left: 6px;
+  margin-top: 10px;
+}
+
+.winv-search {
+  background-color: rgba(255, 255, 255, 0.09);
+  color: #eeeeec;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 15px;
+  padding: 8px 12px;
+  selection-background-color: #3584e4;
+}
+
+.winv-search:focus {
+  border-color: #3584e4;
+  box-shadow: inset 0 0 0 1px #3584e4;
+}
+
+.winv-count {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+  margin-right: 4px;
+  margin-top: 12px;
+}
+
+.winv-scroll {
+  max-height: 384px;
+}
+
+.winv-list {
+  spacing: 6px;
+}
+
+.winv-empty {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  text-align: center;
+  padding: 28px 12px;
+}
+
+.winv-row {
+  background-color: rgba(255, 255, 255, 0.055);
+  border-radius: 12px;
+  border: 1px solid transparent;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.winv-row:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.winv-row.selected {
+  background-color: rgba(53, 132, 228, 0.28);
+  border-color: rgba(53, 132, 228, 0.65);
+}
+
+.winv-row:focus {
+  border-color: rgba(53, 132, 228, 0.65);
+}
+
+.winv-type-icon {
+  color: rgba(255, 255, 255, 0.6);
+  margin-right: 10px;
+  margin-top: 2px;
+}
+
+.winv-thumb {
+  border-radius: 8px;
+  margin-right: 10px;
+}
+
+.winv-preview {
+  font-size: 14px;
+  color: #eeeeec;
+}
+
+.winv-code {
+  font-family: monospace;
+  font-size: 12.5px;
+}
+
+.winv-meta {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 3px;
+}
+
+.winv-pin-mark {
+  color: #e5a50a;
+  margin-left: 8px;
+  margin-top: 2px;
+}
+
+.winv-mini-btn {
+  border-radius: 8px;
+  padding: 6px;
+  margin-left: 4px;
+  opacity: 0.55;
+}
+
+.winv-mini-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  opacity: 1;
+}
+
+.winv-mini-icon {
+  color: #eeeeec;
+  icon-size: 15px;
+}
+
+.winv-footer {
+  spacing: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.winv-hints {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.42);
+  margin-left: 4px;
+  margin-top: 8px;
+}
+
+.winv-footer-btn {
+  border-radius: 9px;
+  padding: 7px;
+  opacity: 0.7;
+}
+
+.winv-footer-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  opacity: 1;
+}
+
+.winv-footer-btn.active {
+  background-color: rgba(229, 165, 10, 0.25);
+  opacity: 1;
+}
+
+.winv-footer-icon {
+  color: #eeeeec;
+  icon-size: 16px;
+}

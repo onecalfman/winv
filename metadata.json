@@ -1,0 +1,9 @@
+{
+  "uuid": "winv@jonas.dev",
+  "name": "WinV Clipboard",
+  "description": "Windows-style Super+V clipboard history. Floating, searchable, with text + image thumbnails and auto-paste.",
+  "shell-version": ["46", "47", "48", "49", "50"],
+  "version": 1,
+  "settings-schema": "org.gnome.shell.extensions.winv",
+  "url": "https://github.com/jonas/winv"
+}
