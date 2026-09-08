@@ -468,6 +468,9 @@ export default class WinVExtension extends Extension {
             this._selected = 0;
             this._render();
         });
+        this._search.get_clutter_text().connect('key-press-event', (_, event) =>
+            this._onKey(event),
+        );
 
         // list
         this._scroll = new St.ScrollView({
@@ -859,8 +862,7 @@ export default class WinVExtension extends Extension {
         const searchText = this._search.get_text();
 
         if (symbol === Clutter.KEY_Escape) {
-            if (searchText) this._search.set_text('');
-            else this.hide();
+            this.hide();
             return Clutter.EVENT_STOP;
         }
         if ((symbol === Clutter.KEY_Return || symbol === Clutter.KEY_KP_Enter) && !ctrl) {

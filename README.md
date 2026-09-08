@@ -54,7 +54,7 @@ On Wayland, log out and back in if the Shell doesn't pick it up immediately.
 | Enter | Paste into focused app |
 | Ctrl+P | Pin / unpin |
 | Del (empty search) or Ctrl+Del | Delete entry |
-| Esc | Clear search, then close |
+| Esc | Close panel |
 
 Footer buttons: private mode (pause recording), clear history, preferences.
 
