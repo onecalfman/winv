@@ -12,7 +12,7 @@ node --check "$ROOT/extension.js"
 node --check "$ROOT/prefs.js"
 
 printf '%s\n' 'Checking extension metadata...'
-test "$UUID" = 'winv@jonas.dev'
+test "$UUID" = 'winv@onecalfman'
 jq -e --arg uuid "$UUID" \
     '.uuid == $uuid and (.name | length > 0) and (."shell-version" | index("50")) != null' \
     "$ROOT/metadata.json" >/dev/null

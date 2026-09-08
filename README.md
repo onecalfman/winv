@@ -27,7 +27,8 @@ winv/
 └── install.sh        # link, compile schemas, free Super+V, enable
 ```
 
-History lives in `~/.cache/winv@jonas.dev/` (`history.json` + `images/`),
+History lives in `~/.cache/winv@onecalfman/` (`history.json` + `images/`). On
+upgrade, WinV migrates the previous `~/.cache/winv@jonas.dev/` history once,
 trimmed to your history size. Pinned items are never evicted.
 
 ## Install
@@ -37,7 +38,7 @@ trimmed to your history size. Pinned items are never evicted.
 ```
 
 The script:
-1. Symlinks the source into `~/.local/share/gnome-shell/extensions/winv@jonas.dev`
+1. Installs the source into `~/.local/share/gnome-shell/extensions/winv@onecalfman`
 2. Compiles the GSettings schema
 3. Frees **Super+V** (`toggle-message-tray` keeps Super+M)
 4. Enables the extension
@@ -60,8 +61,8 @@ Footer buttons: private mode (pause recording), clear history, preferences.
 ## Uninstall
 
 ```sh
-gnome-extensions disable winv@jonas.dev
-rm ~/.local/share/gnome-shell/extensions/winv@jonas.dev
+gnome-extensions disable winv@onecalfman
+rm -rf ~/.local/share/gnome-shell/extensions/winv@onecalfman
 gsettings reset org.gnome.shell.keybindings toggle-message-tray
 ```
 

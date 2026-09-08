@@ -111,7 +111,7 @@ export default class WinVPreferences extends ExtensionPreferences {
         page.add(danger);
         const clearRow = new Adw.ActionRow({
             title: 'Clear history files',
-            subtitle: 'Deletes the on-disk cache under ~/.cache/winv@jonas.dev',
+            subtitle: 'Deletes the on-disk cache under ~/.cache/winv@onecalfman',
         });
         const clearBtn = new Gtk.Button({
             label: 'Clear…', valign: Gtk.Align.CENTER,
@@ -132,7 +132,7 @@ export default class WinVPreferences extends ExtensionPreferences {
                 if (id !== 'clear') return;
                 try {
                     const dir = Gio.File.new_for_path(
-                        GLib.build_filenamev([GLib.get_user_cache_dir(), 'winv@jonas.dev']),
+                        GLib.build_filenamev([GLib.get_user_cache_dir(), 'winv@onecalfman']),
                     );
                     trashRecursive(dir);
                 } catch { /* best effort */ }

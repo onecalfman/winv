@@ -5,7 +5,8 @@
 set -e
 
 SRC="$(cd "$(dirname "$0")" && pwd)"
-UUID="winv@jonas.dev"
+UUID="winv@onecalfman"
+LEGACY_UUID="winv@jonas.dev"
 DEST="$HOME/.local/share/gnome-shell/extensions/$UUID"
 
 echo "→ installing $SRC to $DEST"
@@ -30,6 +31,11 @@ esac
 
 echo "→ enabling $UUID"
 gnome-extensions enable "$UUID" || true
+
+if gnome-extensions show "$LEGACY_UUID" >/dev/null 2>&1; then
+  echo "→ disabling legacy $LEGACY_UUID"
+  gnome-extensions disable "$LEGACY_UUID" || true
+fi
 
 echo "done. Press Super+V. On Wayland, log out/in the first time so the"
 echo "Shell discovers the new extension."

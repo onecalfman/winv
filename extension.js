@@ -19,7 +19,8 @@ import { ensureActorVisibleInScrollView } from 'resource:///org/gnome/shell/misc
 
 const Clipboard = St.Clipboard.get_default();
 
-const UUID = 'winv@jonas.dev';
+const UUID = 'winv@onecalfman';
+const LEGACY_UUID = 'winv@jonas.dev';
 const PANEL_WIDTH = 560;
 const SEARCH_PLACEHOLDER = 'Type to search clipboard…';
 const MAX_TEXT_BYTES = 200 * 1024;
@@ -84,6 +85,7 @@ export default class WinVExtension extends Extension {
         this._imagesDir = GLib.build_filenamev([this._cacheDir, 'images']);
         GLib.mkdir_with_parents(this._cacheDir, 0o700);
         GLib.mkdir_with_parents(this._imagesDir, 0o700);
+        this._migrateLegacyCache();
 
         this._entries = []; // sorted: pinned first, then newest first
         this._nextId = 1;
@@ -142,6 +144,37 @@ export default class WinVExtension extends Extension {
     }
 
     // ---------- persistence ----------
+
+    _migrateLegacyCache() {
+        const legacyDir = Gio.File.new_for_path(
+            GLib.build_filenamev([GLib.get_user_cache_dir(), LEGACY_UUID]),
+        );
+        const newHistory = Gio.File.new_for_path(this._historyFile);
+        const oldHistory = legacyDir.get_child('history.json');
+        if (newHistory.query_exists(null) || !oldHistory.query_exists(null)) return;
+
+        try {
+            oldHistory.copy(newHistory, Gio.FileCopyFlags.NONE, null, null);
+            const oldImages = legacyDir.get_child('images');
+            if (!oldImages.query_exists(null)) return;
+            const imageEnum = oldImages.enumerate_children(
+                'standard::name,standard::type',
+                Gio.FileQueryInfoFlags.NONE,
+                null,
+            );
+            let info;
+            while ((info = imageEnum.next_file(null))) {
+                const source = oldImages.get_child(info.get_name());
+                const target = Gio.File.new_for_path(
+                    GLib.build_filenamev([this._imagesDir, info.get_name()]),
+                );
+                source.copy(target, Gio.FileCopyFlags.NONE, null, null);
+            }
+            console.log(`[${UUID}] migrated history from ${LEGACY_UUID}`);
+        } catch (e) {
+            console.warn(`[${UUID}] legacy history migration failed: ${e}`);
+        }
+    }
 
     _loadHistory() {
         try {

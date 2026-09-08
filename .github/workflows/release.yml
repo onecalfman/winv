@@ -33,13 +33,13 @@ jobs:
         run: |
           mkdir -p dist
           gnome-extensions pack . --force --out-dir dist
-          test -s "dist/winv@jonas.dev.shell-extension.zip"
+          test -s "dist/winv@onecalfman.shell-extension.zip"
 
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$GITHUB_REF_NAME" \
-            "dist/winv@jonas.dev.shell-extension.zip" \
+            "dist/winv@onecalfman.shell-extension.zip" \
             --title "WinV $GITHUB_REF_NAME" \
             --generate-notes
