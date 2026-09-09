@@ -1002,14 +1002,6 @@ export default class WinVExtension extends Extension {
         textCol.add_child(meta);
         box.add_child(textCol);
 
-        if (entry.pinned) {
-            box.add_child(new St.Icon({
-                icon_name: 'starred-symbolic',
-                icon_size: 14,
-                style_class: 'winv-pin-mark',
-            }));
-        }
-
         const pinBtn = new St.Button({ style_class: 'winv-mini-btn', can_focus: false });
         pinBtn.add_child(new St.Icon({
             icon_name: entry.pinned ? 'starred-symbolic' : 'non-starred-symbolic',
