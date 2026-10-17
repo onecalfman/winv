@@ -11,6 +11,9 @@ printf '%s\n' 'Checking JavaScript syntax...'
 node --check "$ROOT/extension.js"
 node --check "$ROOT/prefs.js"
 
+printf '%s\n' 'Checking clipboard history eviction...'
+node --test "$ROOT/tests/"*.test.mjs
+
 printf '%s\n' 'Checking extension metadata...'
 test "$UUID" = 'winv@onecalfman'
 jq -e --arg uuid "$UUID" \

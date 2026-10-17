@@ -321,7 +321,6 @@ export default class WinVExtension extends Extension {
             ts: Date.now(),
         });
         this._trim();
-        this._sortEntries();
         this._scheduleSave();
         if (this._open) this._render();
     }
@@ -366,7 +365,6 @@ export default class WinVExtension extends Extension {
                     } catch { /* dimensions optional */ }
                 });
                 this._trim();
-                this._sortEntries();
                 this._scheduleSave();
                 if (this._open) this._render();
             } catch (e) {
@@ -383,6 +381,8 @@ export default class WinVExtension extends Extension {
     }
 
     _trim() {
+        // New captures are appended; sort before choosing which items to keep.
+        this._sortEntries();
         const maxSize = this._settings.get_int('history-size');
         const pinned = this._entries.filter(e => e.pinned);
         const rest = this._entries.filter(e => !e.pinned).slice(0, maxSize);
@@ -391,7 +391,6 @@ export default class WinVExtension extends Extension {
             if (!keep.has(e.id) && e.type === 'image') this._deleteImageFile(e.file);
         }
         this._entries = [...pinned, ...rest];
-        this._sortEntries();
     }
 
     _deleteImageFile(file) {
