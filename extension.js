@@ -422,28 +422,35 @@ export default class WinVExtension extends Extension {
     // ---------- UI ----------
 
     _buildUi() {
-        this._backdrop = new St.Widget({
-            style_class: 'winv-backdrop',
+        // The modal grab must include both the panel and its click-away area.
+        this._overlay = new St.Widget({
             reactive: true,
             visible: false,
         });
-        const dismissGesture = new Clutter.ClickGesture();
+        Main.uiGroup.add_child(this._overlay);
+
+        this._backdrop = new St.Widget({
+            style_class: 'winv-backdrop',
+            reactive: true,
+        });
+        const dismissGesture = new Clutter.ClickGesture({
+            recognize_on_press: true,
+        });
         dismissGesture.connect('recognize', () => {
             const event = dismissGesture.get_point_event(0);
             if (!event || event.get_button() === Clutter.BUTTON_PRIMARY)
                 this.hide();
         });
         this._backdrop.add_action(dismissGesture);
-        Main.uiGroup.add_child(this._backdrop);
+        this._overlay.add_child(this._backdrop);
 
         this._panel = new St.BoxLayout({
             style_class: 'winv-panel',
             vertical: true,
             reactive: true,
-            visible: false,
             width: PANEL_WIDTH,
         });
-        Main.uiGroup.add_child(this._panel);
+        this._overlay.add_child(this._panel);
 
         // header: search
         const header = new St.BoxLayout({ style_class: 'winv-header', vertical: false });
@@ -590,16 +597,13 @@ export default class WinVExtension extends Extension {
             this._indicator.destroy();
             this._indicator = null;
         }
-        if (this._panel) {
-            Main.uiGroup.remove_child(this._panel);
-            this._panel.destroy();
-            this._panel = null;
+        if (this._overlay) {
+            Main.uiGroup.remove_child(this._overlay);
+            this._overlay.destroy();
+            this._overlay = null;
         }
-        if (this._backdrop) {
-            Main.uiGroup.remove_child(this._backdrop);
-            this._backdrop.destroy();
-            this._backdrop = null;
-        }
+        this._panel = null;
+        this._backdrop = null;
     }
 
     // ---------- caret / anchor tracking (AT-SPI, best effort) ----------
@@ -780,6 +784,8 @@ export default class WinVExtension extends Extension {
     _placePanel() {
         const stageW = global.stage.width;
         const stageH = global.stage.height;
+        this._overlay.set_size(stageW, stageH);
+        this._overlay.set_position(0, 0);
         this._backdrop.set_size(stageW, stageH);
         this._backdrop.set_position(0, 0);
 
@@ -819,11 +825,10 @@ export default class WinVExtension extends Extension {
         this._search.set_text('');
         this._selected = 0;
         this._render();
-        this._backdrop.visible = true;
-        this._panel.visible = true;
+        this._overlay.visible = true;
         this._open = true;
         try {
-            this._modalGrab = Main.pushModal(this._panel, {
+            this._modalGrab = Main.pushModal(this._overlay, {
                 actionMode: Shell.ActionMode.NORMAL,
             });
         } catch {
@@ -837,8 +842,7 @@ export default class WinVExtension extends Extension {
 
     hide() {
         this._releaseModal();
-        if (this._backdrop) this._backdrop.visible = false;
-        if (this._panel) this._panel.visible = false;
+        if (this._overlay) this._overlay.visible = false;
         this._open = false;
     }
 
@@ -1001,7 +1005,11 @@ export default class WinVExtension extends Extension {
         textCol.add_child(meta);
         box.add_child(textCol);
 
-        const pinBtn = new St.Button({ style_class: 'winv-mini-btn', can_focus: false });
+        const pinBtn = new St.Button({
+            style_class: 'winv-mini-btn',
+            can_focus: false,
+            accessible_name: entry.pinned ? 'Unpin entry' : 'Pin entry',
+        });
         pinBtn.add_child(new St.Icon({
             icon_name: entry.pinned ? 'starred-symbolic' : 'non-starred-symbolic',
             icon_size: 15,
@@ -1010,7 +1018,11 @@ export default class WinVExtension extends Extension {
         pinBtn.connect('clicked', () => this._togglePin(entry));
         box.add_child(pinBtn);
 
-        const delBtn = new St.Button({ style_class: 'winv-mini-btn', can_focus: false });
+        const delBtn = new St.Button({
+            style_class: 'winv-mini-btn',
+            can_focus: false,
+            accessible_name: 'Delete entry',
+        });
         delBtn.add_child(new St.Icon({
             icon_name: 'edit-delete-symbolic',
             icon_size: 15,
@@ -1019,13 +1031,8 @@ export default class WinVExtension extends Extension {
         delBtn.connect('clicked', () => this._delete(entry));
         box.add_child(delBtn);
 
-        // The mini buttons live inside the row button: stop press/release
-        // from bubbling up or the row would also activate (paste).
-        for (const btn of [pinBtn, delBtn]) {
-            btn.connect('button-press-event', () => Clutter.EVENT_STOP);
-            btn.connect('button-release-event', () => Clutter.EVENT_STOP);
-        }
-
+        // St.Button handles nested click gestures itself. Stopping raw button
+        // events here prevents the mini buttons from recognizing clicks.
         row.connect('clicked', () => this._activate(entry));
         row._winvIndex = idx;
         return row;

@@ -1,5 +1,7 @@
 # WinV Clipboard
 
+[![CI](https://github.com/onecalfman/winv/actions/workflows/test.yml/badge.svg)](https://github.com/onecalfman/winv/actions/workflows/test.yml)
+
 Windows-style **Super+V** clipboard history for GNOME — designed fresh, not
 another clunky top-bar menu.
 
@@ -57,6 +59,19 @@ On Wayland, log out and back in if the Shell doesn't pick it up immediately.
 | Esc | Close panel |
 
 Footer buttons: private mode (pause recording), clear history, preferences.
+Click outside the popup to dismiss it.
+
+## Development
+
+Run `./tests/validate.sh` for automated checks. See
+[UI testing](tests/UI_TESTING.md) for real desktop interaction checks and
+reloading edited UI code without logging out.
+
+GitHub Actions runs validation on every push and pull request with Node.js 22
+and 24: JavaScript syntax, clipboard history regression tests, GSettings schema
+compilation, and extension packaging. ShellCheck also checks the installer and
+validation scripts. Tagging a release runs those checks before publishing the
+extension ZIP.
 
 ## Uninstall
 

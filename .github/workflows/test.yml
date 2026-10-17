@@ -1,4 +1,4 @@
-name: Test
+name: CI
 
 on:
   push:
@@ -7,23 +7,35 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
-    name: Validate extension
-    runs-on: ubuntu-latest
+    name: Validate extension (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22, 24]
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: ${{ matrix.node-version }}
 
-      - name: Install GNOME packaging tools
+      - name: Install validation tools
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends -y gnome-shell jq unzip
+          sudo apt-get install --no-install-recommends -y gnome-shell jq unzip shellcheck
+
+      - name: Lint shell scripts
+        run: shellcheck install.sh tests/validate.sh
 
       - name: Run validation
         run: ./tests/validate.sh

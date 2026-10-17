@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+ROOT=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
 UUID=$(jq -r '.uuid' "$ROOT/metadata.json")
 SCHEMA="$ROOT/schemas/org.gnome.shell.extensions.winv.gschema.xml"
 TMP=$(mktemp -d)
@@ -10,6 +10,7 @@ trap 'rm -rf "$TMP"' EXIT
 printf '%s\n' 'Checking JavaScript syntax...'
 node --check "$ROOT/extension.js"
 node --check "$ROOT/prefs.js"
+node --check "$ROOT/tests/reload-live.js"
 
 printf '%s\n' 'Checking clipboard history eviction...'
 node --test "$ROOT/tests/"*.test.mjs
