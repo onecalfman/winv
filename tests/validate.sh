@@ -2,11 +2,13 @@
 set -eu
 
 ROOT=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
-UUID=$(jq -r '.uuid' "$ROOT/metadata.json")
-SCHEMA="$ROOT/schemas/org.gnome.shell.extensions.winv.gschema.xml"
-TMP=$(mktemp -d)
-trap 'rm -rf "$TMP"' EXIT
+MODE=${1:-all}
+case "$MODE" in
+    all|javascript|package) ;;
+    *) printf '%s\n' "Unknown validation mode: $MODE" >&2; exit 2 ;;
+esac
 
+if [ "$MODE" != package ]; then
 printf '%s\n' 'Checking JavaScript syntax...'
 node --check "$ROOT/extension.js"
 node --check "$ROOT/prefs.js"
@@ -14,6 +16,13 @@ node --check "$ROOT/tests/reload-live.js"
 
 printf '%s\n' 'Checking clipboard history eviction...'
 node --test "$ROOT/tests/"*.test.mjs
+fi
+
+if [ "$MODE" != javascript ]; then
+UUID=$(jq -r '.uuid' "$ROOT/metadata.json")
+SCHEMA="$ROOT/schemas/org.gnome.shell.extensions.winv.gschema.xml"
+TMP=$(mktemp -d)
+trap 'rm -rf "$TMP"' EXIT
 
 printf '%s\n' 'Checking extension metadata...'
 test "$UUID" = 'winv@onecalfman'
@@ -40,5 +49,6 @@ test -s "$BUNDLE"
 unzip -t "$BUNDLE" >/dev/null
 unzip -Z1 "$BUNDLE" | grep -q '^extension.js$'
 unzip -Z1 "$BUNDLE" | grep -q '^schemas/org.gnome.shell.extensions.winv.gschema.xml$'
+fi
 
 printf '%s\n' 'Validation passed.'

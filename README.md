@@ -90,3 +90,20 @@ gsettings reset org.gnome.shell.keybindings toggle-message-tray
 - Auto-paste waits ~220 ms after setting the clipboard so the new content
   propagates before the synthetic Ctrl+V. Bump `PASTE_DELAY_MS` in
   `extension.js` if pastes land too early on your machine.
+# CI validation scope
+
+`tests/validate.sh` still runs all local checks by default. CI runs its
+`javascript` mode on both Node 22 and 24, and `package` mode plus ShellCheck
+once on Ubuntu 24.04. Metadata, schema compilation, bundle creation and ZIP
+content checks are unchanged; GNOME/system-tool setup is no longer duplicated
+for the Node matrix. `just test-ci` checks this contract.
+
+Local equivalent-work measurement (2026-10-20, Linux, three sequential pairs):
+the former two complete validations took median 0.478s; two Node validations
+plus one packaging validation took 0.410s. This small check-time difference is
+not the principal benefit: it excludes system setup, which historical GitHub
+jobs spent 30–61s doing **twice**. A fresh CI run must establish actual runner
+savings; the additional packaging job can add pickup/checkout latency, so no
+end-to-end speedup is claimed from the local timing. Revert the workflow and
+mode split together to restore the original schedule. No runtime extension or
+release workflow was changed.
