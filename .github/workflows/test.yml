@@ -29,7 +29,18 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install validation tools
+      - name: Run Node-version validation
+        run: ./tests/validate.sh javascript
+
+  package:
+    name: Validate extension packaging
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Install validation tools once
         run: |
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y gnome-shell jq unzip shellcheck
@@ -38,4 +49,4 @@ jobs:
         run: shellcheck install.sh tests/validate.sh
 
       - name: Run validation
-        run: ./tests/validate.sh
+        run: ./tests/validate.sh package
